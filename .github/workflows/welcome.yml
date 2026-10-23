@@ -4,12 +4,23 @@ on:
     types: [opened]
 permissions:
   pull-requests: write
+env:
+  DAY_OF_WEEK: Friday
 jobs:
   welcome:
     name: Post welcome comment
     runs-on: ubuntu-latest
     steps:
-      - run: gh pr comment "$PR_URL" --body "Welcome to the repository Franta! $GITHUB_REF"
+      - run: gh pr comment "$PR_URL" --body "Welcome to the repository $First_Name! $GITHUB_REF and today is $DAY_OF_WEEK"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
+          First_Name: Franta
+      - name: Set the value
+        id: step_one
+        run: |
+          echo "action_state=yellow" >> "$GITHUB_ENV"
+      - name: Use the value
+        id: step_two
+        run: |
+          printf '%s\n' "$action_state" # This will output 'yellow'
